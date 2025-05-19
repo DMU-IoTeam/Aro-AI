@@ -1,0 +1,22 @@
+name: aro-ai-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10.13
+  - numpy=1.26.4
+  - pandas=2.2.2
+  - matplotlib=3.8.4
+  - seaborn=0.13.2
+  - scikit-learn=1.4.2
+  - tqdm=4.66.2
+  - pip
+  - pip:
+      - torch==2.3.1
+      - torchvision==0.18.1
+      - torchaudio==2.3.1
+      - mediapipe==0.10.9
+      - transformers==4.51.3
+      - huggingface-hub==0.31.4
+      - tokenizers==0.21.1
+      - safetensors==0.5.3

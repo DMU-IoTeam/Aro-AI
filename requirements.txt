@@ -1,0 +1,30 @@
+# Core Libraries
+numpy==1.26.4
+pandas==2.2.2
+
+# PyTorch
+torch==2.5.1
+torchvision==0.18.1
+torchaudio==2.5.1
+
+# MediaPipe for pose extraction
+mediapipe==0.10.9
+
+# Visualization
+matplotlib==3.8.4
+seaborn==0.13.2
+
+# Sklearn for evaluation
+scikit-learn==1.4.2
+
+# tqdm for progress bars
+tqdm==4.66.2
+
+# Transformers (scheduler)
+transformers==4.51.3
+huggingface-hub==0.31.4
+tokenizers==0.21.1
+safetensors==0.5.3
+
+# Optional - for avoiding PIL warnings (if image preprocessing is later added)
+Pillow==10.3.0
