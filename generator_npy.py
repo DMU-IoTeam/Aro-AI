@@ -8,9 +8,52 @@ from tqdm import tqdm
 import random
 
 # ✅ 2. Pose Extractor
+# class PoseExtractor:
+#     def __init__(self, num_frames=16):
+#         self.num_frames = num_frames
+
+#     def extract_keypoints(self, video_path):
+#         cap = cv2.VideoCapture(video_path)
+#         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+#         frame_idxs = np.linspace(0, total_frames - 1, self.num_frames).astype(int)
+#         keypoints_sequence = []
+
+#         with mp.solutions.pose.Pose(static_image_mode=False) as pose:
+#             for idx in frame_idxs:
+#                 cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
+#                 ret, frame = cap.read()
+#                 if not ret:
+#                     continue
+#                 frame = cv2.resize(frame, (256, 144))
+#                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#                 result = pose.process(frame_rgb)
+
+#                 if result.pose_landmarks:
+#                     keypoints = []
+#                     for lm in result.pose_landmarks.landmark:
+#                         keypoints.extend([lm.x, lm.y, lm.z, lm.visibility])
+#                 else:
+#                     keypoints = [0] * (33 * 4)
+
+#                 keypoints_sequence.append(keypoints)
+
+#         cap.release()
+
+#         if len(keypoints_sequence) == 0:
+#             print(f"[❗] No keypoints extracted in: {video_path}")
+#             return None
+
+#         while len(keypoints_sequence) < self.num_frames:
+#             keypoints_sequence.append(keypoints_sequence[-1])
+
+#         keypoints_sequence = np.array(keypoints_sequence)
+#         velocity = np.diff(keypoints_sequence, axis=0, prepend=keypoints_sequence[0:1])
+#         combined = np.concatenate([keypoints_sequence, velocity], axis=1)
+#         return combined
 class PoseExtractor:
     def __init__(self, num_frames=16):
         self.num_frames = num_frames
+        self.important_landmarks = [0, 11, 12, 23, 24, 25, 26, 27, 28]  # 낙상 관련 관절만 사용
 
     def extract_keypoints(self, video_path):
         cap = cv2.VideoCapture(video_path)
@@ -30,10 +73,11 @@ class PoseExtractor:
 
                 if result.pose_landmarks:
                     keypoints = []
-                    for lm in result.pose_landmarks.landmark:
+                    for i in self.important_landmarks:
+                        lm = result.pose_landmarks.landmark[i]
                         keypoints.extend([lm.x, lm.y, lm.z, lm.visibility])
                 else:
-                    keypoints = [0] * (33 * 4)
+                    keypoints = [0] * (len(self.important_landmarks) * 4)
 
                 keypoints_sequence.append(keypoints)
 
