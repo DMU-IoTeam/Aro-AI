@@ -7,10 +7,10 @@ class CFG:
     patience = 5
     warmup_ratio = 0.1
 
-    train_fall_dir = "extracted_data/npy/train/fall"
-    train_normal_dir = "extracted_data/npy/train/normal"
-    val_fall_dir = "extracted_data/npy/val/fall"
-    val_normal_dir = "extracted_data/npy/val/normal"
+    train_fall_dir = "reduced_extracted_data/npy/train/fall"
+    train_normal_dir = "reduced_extracted_data/npy/train/normal"
+    val_fall_dir = "reduced_extracted_data/npy/val/fall"
+    val_normal_dir = "reduced_extracted_data/npy/val/normal"
 
-    save_path = "fall_gru_best.pt"
+    save_path = "reduced_fall_gru_best.pt"
     device = "cuda" if torch.cuda.is_available() else "cpu"

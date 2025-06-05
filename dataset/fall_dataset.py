@@ -13,6 +13,7 @@ class FallDataset(Dataset):
 
     def __getitem__(self, idx):
         data = np.load(self.file_list[idx])
+        assert data.shape[1] == 104, f"Unexpected input shape: {data.shape}"
         label = self.labels[idx]
         return torch.tensor(data, dtype=torch.float32), torch.tensor(label, dtype=torch.long)
 

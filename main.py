@@ -7,10 +7,12 @@ from dataset.fall_dataset import get_dataloaders
 from model.gru_model import FallGRUClassifier
 from utils.scheduler import get_scheduler
 from utils.metrics import evaluate
+from utils.focal_loss import FocalLoss
 from visualization.plot_results import plot_training, plot_confusion
 
+
 # 📁 결과 저장 폴더 생성
-os.makedirs("results", exist_ok=True)
+os.makedirs("reduced_results", exist_ok=True)
 
 # ✅ 데이터 로딩
 train_loader, val_loader = get_dataloaders(CFG)
@@ -20,7 +22,10 @@ model = FallGRUClassifier().to(CFG.device)
 optimizer = optim.Adam(model.parameters(), lr=CFG.lr)
 total_steps = len(train_loader) * CFG.epochs
 scheduler = get_scheduler(optimizer, total_steps, int(CFG.warmup_ratio * total_steps))
-criterion = nn.CrossEntropyLoss()
+# 그냥 가중치 조절절
+# weights = torch.tensor([1.0, 1.5]).to(CFG.device)
+# criterion = nn.CrossEntropyLoss(weight=weights)
+criterion = FocalLoss(gamma=2.0, alpha=[1.0, 1.5]).to(CFG.device)
 
 # ✅ 기록용 리스트
 train_losses, val_losses = [], []
@@ -71,14 +76,14 @@ for epoch in range(CFG.epochs):
     print(val_report)
 
     # 📝 저장
-    with open("results/val_report_epoch_last.txt", "w") as f:
+    with open("reduced_results/val_report_epoch_last.txt", "w") as f:
         f.write(val_report)
 
     # ✅ Best 모델 저장
     if val_f1 > best_f1:
         best_f1 = val_f1
         torch.save(model.state_dict(), CFG.save_path)
-        with open("results/val_report_best.txt", "w") as f:
+        with open("reduced_results/val_report_best.txt", "w") as f:
             f.write(val_report)
         print(f"✅ Best model saved (F1: {val_f1:.2%})")
         wait = 0
@@ -89,5 +94,5 @@ for epoch in range(CFG.epochs):
             break
 
 # ✅ 시각화 저장
-plot_training(train_losses, val_losses, train_f1s, val_f1s, lrs, save_path="results/training_metrics.png")
-plot_confusion(cm, save_path="results/confusion_matrix.png")
+plot_training(train_losses, val_losses, train_f1s, val_f1s, lrs, save_path="reduced_results/training_metrics.png")
+plot_confusion(cm, save_path="reduced_results/confusion_matrix.png")
