@@ -1,2 +1,6 @@
 extracted_video
 extracting_npy.log
+
+venv
+
+*.mp4

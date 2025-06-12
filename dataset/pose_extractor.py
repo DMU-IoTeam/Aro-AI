@@ -21,6 +21,7 @@ class PoseExtractor:
             if not ret:
                 break
             if i in frame_idxs:
+                frame = cv2.resize(frame, (256, 144))
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 result = self.pose.process(frame_rgb)
 

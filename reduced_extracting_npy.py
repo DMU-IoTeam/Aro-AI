@@ -34,6 +34,7 @@ class PoseExtractor:
                                     23, 24, 25, 26, 27, 28]
 
     def extract_keypoints(self, video_path):
+        print("!@#!#!@#!@#!@#!@#")
         cap = cv2.VideoCapture(video_path)
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         frame_idxs = np.linspace(0, total_frames - 1, self.num_frames).astype(int)
@@ -66,9 +67,11 @@ class PoseExtractor:
         while len(keypoints_sequence) < self.num_frames:
             keypoints_sequence.append(keypoints_sequence[-1])
 
+        print("#####################")
         keypoints_sequence = np.array(keypoints_sequence)
         velocity = np.diff(keypoints_sequence, axis=0, prepend=keypoints_sequence[0:1])
         combined = np.concatenate([keypoints_sequence, velocity], axis=1)
+        print(combined)
         return combined
 
 
@@ -80,14 +83,21 @@ def process_and_save(videos, label_type, dataset_type):
     success, fail = 0, 0
 
     for video_path in tqdm(videos, desc=f"{dataset_type}/{label_type}"):
-        npy_path = get_npy_save_path(video_path, label_type, dataset_type)
+        print("📂 현재 비디오 경로:", video_path)
+        print("🔍 파일 존재 여부:", os.path.exists(video_path))
+        npy_path = os.path.join(os.path.dirname(__file__), 'temp', f"{label_type}")
 
-        if os.path.exists(npy_path):
-            continue
+        # if os.path.exists(npy_path):
+        #     continue
 
+        print("1")
         keypoints = extractor.extract_keypoints(video_path)
+        print("2")
         if keypoints is not None:
             # 🔧 디렉터리 자동 생성
+            print("#######")
+            print(npy_path)
+            print("#######")
             os.makedirs(os.path.dirname(npy_path), exist_ok=True)
 
             np.save(npy_path, keypoints)
@@ -100,7 +110,9 @@ def process_and_save(videos, label_type, dataset_type):
 
 
 # ✅ 6. 네 종류의 데이터 각각 저장
-process_and_save(train_fall_videos, "fall", "train")
-process_and_save(train_normal_videos, "normal", "train")
-process_and_save(val_fall_videos, "fall", "val")
-process_and_save(val_normal_videos, "normal", "val")
+# process_and_save(train_fall_videos, "fall", "train")
+# process_and_save(train_normal_videos, "normal", "train")
+# process_and_save(val_fall_videos, "fall", "val")
+# process_and_save(val_normal_videos, "normal", "val")
+process_and_save(["temp/fall.mp4"], "fall", "val")
+process_and_save(["temp/normal.mp4"], "normal", "val")
