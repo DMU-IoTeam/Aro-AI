@@ -6,6 +6,7 @@ class CFG:
     lr = 1e-3
     patience = 5
     warmup_ratio = 0.1
+    dropout = 0.3
 
     train_fall_dir = "reduced_extracted_data/npy/train/fall"
     train_normal_dir = "reduced_extracted_data/npy/train/normal"

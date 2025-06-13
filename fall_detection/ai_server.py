@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import torch
 import numpy as np
 from model.gru_model import FallGRUClassifier
-from utils.notify import send_fall_alert # 구현해야 함 알림 기능능
+from utils.notify import send_fall_alert # 구현해야 함 알림 기능
 
 app = Flask(__name__)
 
