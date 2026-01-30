@@ -22,7 +22,6 @@ model = FallGRUClassifier().to(CFG.device)
 optimizer = optim.Adam(model.parameters(), lr=CFG.lr)
 total_steps = len(train_loader) * CFG.epochs
 scheduler = get_scheduler(optimizer, total_steps, int(CFG.warmup_ratio * total_steps))
-# 그냥 가중치 조절절
 # weights = torch.tensor([1.0, 1.5]).to(CFG.device)
 # criterion = nn.CrossEntropyLoss(weight=weights)
 criterion = FocalLoss(gamma=2.0, alpha=[1.0, 1.5]).to(CFG.device)
